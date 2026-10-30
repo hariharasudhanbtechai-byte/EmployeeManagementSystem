@@ -33,6 +33,46 @@ public class EmployeeService : IEmployeeService
         };
     }
 
+    //Ganesh Create
+    public async Task<EmployeeResponse> CreateAsync(
+        CreateEmployeeRequest request)
+    {
+        var employeeCodeExists =
+            await _employeeRepository.EmployeeCodeExistsAsync(
+                request.EmployeeCode);
+
+        if (employeeCodeExists)
+        {
+            throw new InvalidOperationException(
+                $"Employee code '{request.EmployeeCode}' already exists.");
+        }
+
+        var employee = new Employee
+        {
+            EmployeeCode = request.EmployeeCode,
+            FullName = request.FullName,
+            Email = request.Email,
+            Department = request.Department,
+            Designation = request.Designation,
+            JoiningDate = request.JoiningDate!.Value,
+            ActiveStatus = true
+        };
+
+        var createdEmployee =
+            await _employeeRepository.CreateAsync(employee);
+
+        return new EmployeeResponse
+        {
+            EmployeeId = createdEmployee.EmployeeId,
+            EmployeeCode = createdEmployee.EmployeeCode,
+            FullName = createdEmployee.FullName,
+            Email = createdEmployee.Email,
+            Department = createdEmployee.Department,
+            Designation = createdEmployee.Designation,
+            JoiningDate = createdEmployee.JoiningDate,
+            ActiveStatus = createdEmployee.ActiveStatus
+        };
+    }
     public async Task<bool> UpdateAsync(
         int id,
         UpdateEmployeeRequest request)
