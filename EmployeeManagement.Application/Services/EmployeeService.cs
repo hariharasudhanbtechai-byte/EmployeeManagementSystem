@@ -12,6 +12,26 @@ public class EmployeeService : IEmployeeService
     {
         _employeeRepository = employeeRepository;
     }
+    //SAI - GetByID
+   public async Task<EmployeeResponse?> GetByIdAsync(int id)
+    {
+        var employee = await _employeeRepository.GetByIdAsync(id);
+
+        if (employee is null)
+            return null;
+
+        return new EmployeeResponse
+        {
+            EmployeeId = employee.EmployeeId,
+            EmployeeCode = employee.EmployeeCode,
+            FullName = employee.FullName,
+            Email = employee.Email,
+            Department = employee.Department,
+            Designation = employee.Designation,
+            JoiningDate = employee.JoiningDate,
+            ActiveStatus = employee.ActiveStatus
+        };
+    }
 
     //Ganesh Create
     public async Task<EmployeeResponse> CreateAsync(
@@ -74,4 +94,38 @@ public class EmployeeService : IEmployeeService
 
         return await _employeeRepository.UpdateAsync(employee);
     }
+
+
+    //Start By vishnu -- Get
+    public async Task<List<EmployeeResponse>> GetAllAsync()
+    {
+        try
+        {
+            var employees = await _employeeRepository.GetAllAsync();
+
+            if (employees == null)
+            {
+                throw new KeyNotFoundException("No employee Found.");
+            }
+
+            var result = employees.Select(s => new EmployeeResponse
+            {
+                EmployeeId = s.EmployeeId,
+                EmployeeCode = s.EmployeeCode,
+                FullName = s.FullName,
+                Email = s.Email,
+                Department = s.Department,
+                Designation = s.Designation,
+                JoiningDate = s.JoiningDate,
+                ActiveStatus = s.ActiveStatus
+            }).ToList();
+
+            return result;
+        }
+        catch (KeyNotFoundException)
+        {
+            throw;
+        }
+    }
+
 }
