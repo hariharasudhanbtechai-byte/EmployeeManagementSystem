@@ -12,6 +12,26 @@ public class EmployeeService : IEmployeeService
     {
         _employeeRepository = employeeRepository;
     }
+    //SAI - GetByID
+   public async Task<EmployeeResponse?> GetByIdAsync(int id)
+    {
+        var employee = await _employeeRepository.GetByIdAsync(id);
+
+        if (employee is null)
+            return null;
+
+        return new EmployeeResponse
+        {
+            EmployeeId = employee.EmployeeId,
+            EmployeeCode = employee.EmployeeCode,
+            FullName = employee.FullName,
+            Email = employee.Email,
+            Department = employee.Department,
+            Designation = employee.Designation,
+            JoiningDate = employee.JoiningDate,
+            ActiveStatus = employee.ActiveStatus
+        };
+    }
 
     public async Task<bool> UpdateAsync(
         int id,
