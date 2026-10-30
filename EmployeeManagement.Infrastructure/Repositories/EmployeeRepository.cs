@@ -1,6 +1,7 @@
 ﻿using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Domain.Entities;
 using EmployeeManagement.Infrastructure.Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Infrastructure.Repositories;
@@ -14,6 +15,36 @@ public class EmployeeRepository : IEmployeeRepository
         _context = context;
     }
 
+    // ===== Ganesh - START: Check employee code duplication =====
+    public async Task<bool> EmployeeCodeExistsAsync(
+       string employeeCode)
+    {
+        return await _context.Employees
+            .AnyAsync(e => e.EmployeeCode == employeeCode);
+    }
+
+    
+    public async Task<Employee> CreateAsync(Employee employee)
+    {
+        await _context.Employees.AddAsync(employee);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+            when (ex.InnerException is SqlException sqlException
+                  && (sqlException.Number == 2601
+                      || sqlException.Number == 2627))
+        {
+            throw new InvalidOperationException(
+                $"Employee code '{employee.EmployeeCode}' already exists.",
+                ex);
+        }
+
+        return employee;
+    }
+    // ===== Ganesh - START: Check employee code duplication =====
     public async Task<bool> UpdateAsync(Employee employee)
     {
         var existingEmployee = await _context.Employees
