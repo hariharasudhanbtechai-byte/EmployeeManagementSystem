@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.Application.DTOs;
+using EmployeeManagement.Application.DTOs;
 using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Domain.Entities;
 
@@ -12,8 +12,9 @@ public class EmployeeService : IEmployeeService
     {
         _employeeRepository = employeeRepository;
     }
-    //SAI - GetByID
-   public async Task<EmployeeResponse?> GetByIdAsync(int id)
+
+    // SAI - GetByID
+    public async Task<EmployeeResponse?> GetByIdAsync(int id)
     {
         var employee = await _employeeRepository.GetByIdAsync(id);
 
@@ -33,7 +34,7 @@ public class EmployeeService : IEmployeeService
         };
     }
 
-    //Ganesh Create
+    // Ganesh - Create (POST)
     public async Task<EmployeeResponse> CreateAsync(
         CreateEmployeeRequest request)
     {
@@ -73,6 +74,8 @@ public class EmployeeService : IEmployeeService
             ActiveStatus = createdEmployee.ActiveStatus
         };
     }
+
+    // Update
     public async Task<bool> UpdateAsync(
         int id,
         UpdateEmployeeRequest request)
@@ -80,9 +83,7 @@ public class EmployeeService : IEmployeeService
         var employee = await _employeeRepository.GetByIdAsync(id);
 
         if (employee == null)
-        {
             return false;
-        }
 
         employee.EmployeeCode = request.EmployeeCode;
         employee.FullName = request.FullName;
@@ -95,37 +96,35 @@ public class EmployeeService : IEmployeeService
         return await _employeeRepository.UpdateAsync(employee);
     }
 
-
-    //Start By vishnu -- Get
-    public async Task<List<EmployeeResponse>> GetAllAsync()
+    // Siddarth - Delete employee by ID
+    public async Task<bool> DeleteEmployeeAsync(int id)
     {
-        try
-        {
-            var employees = await _employeeRepository.GetAllAsync();
+        if (id <= 0)
+            return false;
 
-            if (employees == null)
-            {
-                throw new KeyNotFoundException("No employee Found.");
-            }
-
-            var result = employees.Select(s => new EmployeeResponse
-            {
-                EmployeeId = s.EmployeeId,
-                EmployeeCode = s.EmployeeCode,
-                FullName = s.FullName,
-                Email = s.Email,
-                Department = s.Department,
-                Designation = s.Designation,
-                JoiningDate = s.JoiningDate,
-                ActiveStatus = s.ActiveStatus
-            }).ToList();
-
-            return result;
-        }
-        catch (KeyNotFoundException)
-        {
-            throw;
-        }
+        return await _employeeRepository.DeleteAsync(id);
     }
 
+    // Vishnu - Get All
+    public async Task<List<EmployeeResponse>> GetAllAsync()
+    {
+        var employees = await _employeeRepository.GetAllAsync();
+
+        if (employees == null)
+        {
+            throw new KeyNotFoundException("No employee Found.");
+        }
+
+        return employees.Select(s => new EmployeeResponse
+        {
+            EmployeeId = s.EmployeeId,
+            EmployeeCode = s.EmployeeCode,
+            FullName = s.FullName,
+            Email = s.Email,
+            Department = s.Department,
+            Designation = s.Designation,
+            JoiningDate = s.JoiningDate,
+            ActiveStatus = s.ActiveStatus
+        }).ToList();
+    }
 }

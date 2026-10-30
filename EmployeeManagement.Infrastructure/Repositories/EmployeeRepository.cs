@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.Application.Interfaces;
+using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Domain.Entities;
 using EmployeeManagement.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
@@ -15,15 +15,14 @@ public class EmployeeRepository : IEmployeeRepository
         _context = context;
     }
 
-    // ===== Ganesh - START: Check employee code duplication =====
-    public async Task<bool> EmployeeCodeExistsAsync(
-       string employeeCode)
+    // Ganesh - Check employee code duplication
+    public async Task<bool> EmployeeCodeExistsAsync(string employeeCode)
     {
         return await _context.Employees
             .AnyAsync(e => e.EmployeeCode == employeeCode);
     }
 
-    
+    // Ganesh - POST
     public async Task<Employee> CreateAsync(Employee employee)
     {
         await _context.Employees.AddAsync(employee);
@@ -44,16 +43,22 @@ public class EmployeeRepository : IEmployeeRepository
 
         return employee;
     }
-    // ===== Ganesh - START: Check employee code duplication =====
+
+    // SAI - GET BY ID
+    public async Task<Employee?> GetByIdAsync(int id)
+    {
+        return await _context.Employees
+            .FirstOrDefaultAsync(e => e.EmployeeId == id);
+    }
+
+    // Update
     public async Task<bool> UpdateAsync(Employee employee)
     {
         var existingEmployee = await _context.Employees
             .FirstOrDefaultAsync(e => e.EmployeeId == employee.EmployeeId);
 
         if (existingEmployee == null)
-        {
             return false;
-        }
 
         existingEmployee.EmployeeCode = employee.EmployeeCode;
         existingEmployee.FullName = employee.FullName;
@@ -68,10 +73,25 @@ public class EmployeeRepository : IEmployeeRepository
         return true;
     }
 
-    //Start By Vishnu -- Get All Employee
+    // Siddarth - DELETE BY ID
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var employee = await _context.Employees
+            .FirstOrDefaultAsync(e => e.EmployeeId == id);
+
+        if (employee == null)
+            return false;
+
+        _context.Employees.Remove(employee);
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    // Vishnu - GET ALL
     public async Task<List<Employee>> GetAllAsync()
     {
         return await _context.Employees.ToListAsync();
     }
-    //End of Get All Employee
 }
