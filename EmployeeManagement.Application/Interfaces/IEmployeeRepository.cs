@@ -8,6 +8,8 @@ public interface IEmployeeRepository
 
     Task<Employee?> GetByIdAsync(int id);
 
+    Task<bool> EmployeeCodeExistsAsync(string employeeCode);
+
     Task<Employee> CreateAsync(Employee employee);
 
     Task<bool> UpdateAsync(Employee employee);
