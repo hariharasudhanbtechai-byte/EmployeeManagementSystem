@@ -12,5 +12,6 @@ public interface IEmployeeRepository
 
     Task<bool> UpdateAsync(Employee employee);
 
+    //Siddarth -Delete employee by id
     Task<bool> DeleteAsync(int id);
 }

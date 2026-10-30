@@ -36,4 +36,21 @@ public class EmployeeRepository : IEmployeeRepository
 
         return true;
     }
+    //Siddarth -Delete employee by id
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var employee = await _context.Employees
+            .FirstOrDefaultAsync(e => e.EmployeeId == id);
+
+        if (employee == null)
+        {
+            return false;
+        }
+
+        _context.Employees.Remove(employee);
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 }

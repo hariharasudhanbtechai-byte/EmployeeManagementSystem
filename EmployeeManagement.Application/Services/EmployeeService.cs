@@ -34,4 +34,15 @@ public class EmployeeService : IEmployeeService
 
         return await _employeeRepository.UpdateAsync(employee);
     }
+
+    //Siddarth -Delete employee by id
+    public async Task<bool> DeleteEmployeeAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return false;
+        }
+
+        return await _employeeRepository.DeleteAsync(id);
+    }
 }
