@@ -34,4 +34,38 @@ public class EmployeeService : IEmployeeService
 
         return await _employeeRepository.UpdateAsync(employee);
     }
+
+
+    //Start By vishnu -- Get
+    public async Task<List<EmployeeResponse>> GetAllAsync()
+    {
+        try
+        {
+            var employees = await _employeeRepository.GetAllAsync();
+
+            if (employees == null)
+            {
+                throw new KeyNotFoundException("No employee Found.");
+            }
+
+            var result = employees.Select(s => new EmployeeResponse
+            {
+                EmployeeId = s.EmployeeId,
+                EmployeeCode = s.EmployeeCode,
+                FullName = s.FullName,
+                Email = s.Email,
+                Department = s.Department,
+                Designation = s.Designation,
+                JoiningDate = s.JoiningDate,
+                ActiveStatus = s.ActiveStatus
+            }).ToList();
+
+            return result;
+        }
+        catch (KeyNotFoundException)
+        {
+            throw;
+        }
+    }
+
 }

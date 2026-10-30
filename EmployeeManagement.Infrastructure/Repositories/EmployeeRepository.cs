@@ -36,4 +36,11 @@ public class EmployeeRepository : IEmployeeRepository
 
         return true;
     }
+
+    //Start By Vishnu -- Get All Employee
+    public async Task<List<Employee>> GetAllAsync()
+    {
+        return await _context.Employees.ToListAsync();
+    }
+    //End of Get All Employee
 }
