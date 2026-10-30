@@ -17,5 +17,5 @@ public interface IEmployeeService
         UpdateEmployeeRequest request);
 
     //Siddarth -Delete employee by id
-    Task<bool> DeleteAsync(int id);
+    Task<bool> DeleteEmployeeAsync(int id);
 }
