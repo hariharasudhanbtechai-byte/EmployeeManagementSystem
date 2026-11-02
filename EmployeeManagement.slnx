@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
   <Project Path="EmployeeManagement.Api/EmployeeManagement.Api.csproj" />
   <Project Path="EmployeeManagement.Application/EmployeeManagement.Application.csproj" />
   <Project Path="EmployeeManagement.Domain/EmployeeManagement.Domain.csproj" />

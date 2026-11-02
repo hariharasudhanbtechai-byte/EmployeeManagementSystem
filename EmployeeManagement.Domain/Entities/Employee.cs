@@ -18,4 +18,5 @@ public class Employee
     public DateTime JoiningDate { get; set; }
 
     public bool ActiveStatus { get; set; } = true;
+
 }
