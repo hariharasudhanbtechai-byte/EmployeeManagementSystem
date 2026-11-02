@@ -1,14 +1,17 @@
+<<<<<<< Updated upstream
 ﻿
+=======
+﻿using Xunit;
+using Moq;
+>>>>>>> Stashed changes
 using EmployeeManagement.Application.DTOs;
 using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Application.Services;
 using EmployeeManagement.Domain.Entities;
-using Moq;
-
-namespace EmployeeManagement.Tests;
 
 public class EmployeeServiceTests
 {
+<<<<<<< Updated upstream
     // ===== UPDATE TESTS =====
 
     [Fact]
@@ -63,17 +66,49 @@ public class EmployeeServiceTests
                 e.Department == "HR" &&
                 e.Email == "arunraj@gmail.com")),
             Times.Once);
+=======
+    private readonly Mock<IEmployeeRepository> _mockRepository;
+    private readonly EmployeeService _employeeService;
+
+    public EmployeeServiceTests()
+    {
+        _mockRepository = new Mock<IEmployeeRepository>();
+
+        _employeeService =
+            new EmployeeService(_mockRepository.Object);
+>>>>>>> Stashed changes
     }
 
     [Fact]
-    public async Task UpdateAsync_EmployeeNotFound_ReturnsFalse()
+    public async Task GetAllAsync_ShouldReturnEmployees()
     {
+<<<<<<< Updated upstream
         var mockRepository = new Mock<IEmployeeRepository>();
+=======
+        // Arrange
+        var employees = new List<Employee>
+{
+    new Employee
+    {
+        EmployeeId = 1,
+        EmployeeCode = "EMP001",
+        FullName = "Chandu"
+    },
+    new Employee
+    {
+        EmployeeId = 2,
+        EmployeeCode = "EMP002",
+        FullName = "Rahul"
+    }
+};
 
-        mockRepository
-            .Setup(r => r.GetByIdAsync(999))
-            .ReturnsAsync((Employee?)null);
+        _mockRepository
+            .Setup(x => x.GetAllAsync())
+            .ReturnsAsync(employees);
+>>>>>>> Stashed changes
 
+
+<<<<<<< Updated upstream
         var service = new EmployeeService(mockRepository.Object);
         var request = new UpdateEmployeeRequest();
 
@@ -84,11 +119,21 @@ public class EmployeeServiceTests
         mockRepository.Verify(
             r => r.UpdateAsync(It.IsAny<Employee>()),
             Times.Never);
+=======
+
+        // Act
+        var result = await _employeeService.GetAllAsync();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count());
+>>>>>>> Stashed changes
     }
 
     [Fact]
-    public async Task UpdateAsync_RepositoryReturnsFalse_ReturnsFalse()
+    public async Task GetAllAsync_ShouldThrowException_WhenDatabaseFails()
     {
+<<<<<<< Updated upstream
         var mockRepository = new Mock<IEmployeeRepository>();
 
         var existingEmployee = new Employee
@@ -186,6 +231,19 @@ public class EmployeeServiceTests
                 e.JoiningDate == new DateTime(2025, 2, 15) &&
                 e.ActiveStatus == false)),
             Times.Once);
+=======
+        // Arrange
+        _mockRepository
+            .Setup(x => x.GetAllAsync())
+            .ThrowsAsync(new Exception("Database connection failed"));
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<Exception>(
+            () => _employeeService.GetAllAsync()
+        );
+
+        Assert.Equal("Database connection failed", exception.Message);
+>>>>>>> Stashed changes
     }
 
     // ===== POST TESTS =====
