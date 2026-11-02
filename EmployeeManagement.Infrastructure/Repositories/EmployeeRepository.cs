@@ -1,3 +1,4 @@
+
 using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Domain.Entities;
 using EmployeeManagement.Infrastructure.Data;
@@ -48,14 +49,16 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<Employee?> GetByIdAsync(int id)
     {
         return await _context.Employees
-            .FirstOrDefaultAsync(e => e.EmployeeId == id);
+            .FirstOrDefaultAsync(e => e.EmployeeId == id && e.ActiveStatus);
     }
 
-    // Update
+    // UPDATE
+    // UPDATE
     public async Task<bool> UpdateAsync(Employee employee)
     {
         var existingEmployee = await _context.Employees
-            .FirstOrDefaultAsync(e => e.EmployeeId == employee.EmployeeId);
+            .FirstOrDefaultAsync(e =>
+                e.EmployeeId == employee.EmployeeId && e.ActiveStatus);
 
         if (existingEmployee == null)
             return false;
@@ -73,25 +76,28 @@ public class EmployeeRepository : IEmployeeRepository
         return true;
     }
 
-    // Siddarth - DELETE BY ID
+    // SIDDARTH - SOFT DELETE BY ID
     public async Task<bool> DeleteAsync(int id)
     {
         var employee = await _context.Employees
-            .FirstOrDefaultAsync(e => e.EmployeeId == id);
+            .FirstOrDefaultAsync(e =>
+                e.EmployeeId == id && e.ActiveStatus);
 
         if (employee == null)
             return false;
 
-        _context.Employees.Remove(employee);
+        employee.ActiveStatus = false;
 
         await _context.SaveChangesAsync();
 
         return true;
     }
 
-    // Vishnu - GET ALL
+    // VISHNU - GET ALL (EXCLUDE DELETED EMPLOYEES)
     public async Task<List<Employee>> GetAllAsync()
     {
-        return await _context.Employees.ToListAsync();
+        return await _context.Employees
+            .Where(e => e.ActiveStatus)
+            .ToListAsync();
     }
 }
