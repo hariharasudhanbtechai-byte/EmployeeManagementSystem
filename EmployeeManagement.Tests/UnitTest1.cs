@@ -462,4 +462,69 @@ public class EmployeeServiceTests
             Times.Once
         );
     }
+
+    [Fact]
+    public async Task DeleteEmployeeAsync_ValidId_ReturnsTrue()
+    {
+        // Arrange
+        var mockRepository = new Mock<IEmployeeRepository>();
+
+        mockRepository
+            .Setup(r => r.DeleteAsync(101))
+            .ReturnsAsync(true);
+
+        var service = new EmployeeService(mockRepository.Object);
+
+        // Act
+        var result = await service.DeleteEmployeeAsync(101);
+
+        // Assert
+        Assert.True(result);
+
+        mockRepository.Verify(
+            r => r.DeleteAsync(101),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteEmployeeAsync_EmployeeNotFound_ReturnsFalse()
+    {
+        // Arrange
+        var mockRepository = new Mock<IEmployeeRepository>();
+
+        mockRepository
+            .Setup(r => r.DeleteAsync(999))
+            .ReturnsAsync(false);
+
+        var service = new EmployeeService(mockRepository.Object);
+
+        // Act
+        var result = await service.DeleteEmployeeAsync(999);
+
+        // Assert
+        Assert.False(result);
+
+        mockRepository.Verify(
+            r => r.DeleteAsync(999),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteEmployeeAsync_InvalidId_ReturnsFalse()
+    {
+        // Arrange
+        var mockRepository = new Mock<IEmployeeRepository>();
+
+        var service = new EmployeeService(mockRepository.Object);
+
+        // Act
+        var result = await service.DeleteEmployeeAsync(0);
+
+        // Assert
+        Assert.False(result);
+
+        mockRepository.Verify(
+            r => r.DeleteAsync(It.IsAny<int>()),
+            Times.Never);
+    }
 }
