@@ -1,0 +1,79 @@
+# ==========================================
+# EMPLOYEE MANAGEMENT SYSTEM - GITIGNORE
+# ==========================================
+
+# ------------------------------------------
+# .NET / ASP.NET CORE BACKEND
+# ------------------------------------------
+
+# Build output
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.pdb
+*.log
+
+# Test results
+**/TestResults/
+*.trx
+
+# NuGet
+*.nupkg
+*.snupkg
+
+# ------------------------------------------
+# ANGULAR FRONTEND
+# ------------------------------------------
+
+# Node dependencies
+/Frontend/node_modules/
+
+# Angular build output
+/Frontend/dist/
+
+/Frontend/.angular/
+
+# Test coverage
+/Frontend/coverage/
+
+# Temporary files
+/Frontend/tmp/
+/Frontend/out-tsc/
+
+# ------------------------------------------
+# IDEs AND EDITORS
+# ------------------------------------------
+
+.idea/
+.vscode/
+*.code-workspace
+
+# ------------------------------------------
+# OPERATING SYSTEM FILES
+# ------------------------------------------
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ------------------------------------------
+# ENVIRONMENT AND SECRETS
+# ------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+# ------------------------------------------
+# LOG FILES
+# ------------------------------------------
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
